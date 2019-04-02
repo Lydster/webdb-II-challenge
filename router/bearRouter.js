@@ -12,15 +12,15 @@ const knexConfig = {
 const db = knex(knexConfig);
 
 router.post("/", (req, res) => {
-  db("zoos")
+  db("bears")
     .insert(req.body)
     .then(ids => {
       const [id] = ids;
       db("zoos")
         .where({ id })
         .first()
-        .then(zoo => {
-          res.status(200).json(zoo);
+        .then(bear => {
+          res.status(200).json(bear);
         });
     })
     .catch(err => {
@@ -29,25 +29,25 @@ router.post("/", (req, res) => {
 });
 
 router.get("/", (req, res) => {
-  db("zoos")
-    .then(zoos => {
-      res.status(200).json(zoos);
+  db("bears")
+    .then(bears => {
+      res.status(200).json(bears);
     })
-    .catch(error => {
-      res.status(500).json(error);
+    .catch(err => {
+      res.status(500).json(err);
     });
 });
 
 router.get("/:id", (req, res) => {
-  db("zoos")
+  db("bears")
     .where({ id: req.params.id })
     .first()
-    .then(zoo => {
-      if (zoo) {
-        res.status(200).json(zoo);
+    .then(bear => {
+      if (bear) {
+        res.status(200).json(bear);
       } else {
         res.status(404).json({
-          message: "could not get zoo of index selected. Zoo does not exist"
+          message: "Could not get zoo of index selected. Bear does not exist."
         });
       }
     })
@@ -58,16 +58,16 @@ router.get("/:id", (req, res) => {
 
 router.delete("/:id", (req, res) => {
   const { id } = req.params;
-  db("zoos")
+  db("bears")
     .where({ id })
     .del()
     .then(count => {
       if (count > 0) {
-        res.status(200).json({ message: "Successfully Deleted" });
+        res.status(200).json({ message: "Successfully deleted!" });
       } else {
         res
           .status(404)
-          .json({ error: "The zoo you are trying to delete does not exist." });
+          .json({ error: "The bear you are tring to delete does not exist" });
       }
     })
     .catch(err => {
@@ -76,21 +76,21 @@ router.delete("/:id", (req, res) => {
 });
 
 router.put("/:id", (req, res) => {
-  db("zoos")
+  db("bears")
     .where({ id: req.params.id })
     .update(req.body)
     .then(count => {
       if (count > 0) {
-        db("zoos")
+        db("bears")
           .where({ id: req.params.id })
           .first()
-          .then(zoo => {
-            res.status(200).json(zoo);
+          .then(bear => {
+            res.status(200).json(bear);
           });
       } else {
         res
           .status(404)
-          .json({ error: "Zoo you are trying to update does not exist" });
+          .json({ error: "Bear you are trying to update does not exist" });
       }
     })
     .catch(err => {
